@@ -22,17 +22,22 @@ export default class SearchBar extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handeSubmit}>
-        <input
-          type="text"
-          name="searchName"
-          value={this.state.searchName}
-          onChange={this.handleNameChange}
-        />
-        <button type="submit">
-          <BsSearch />
-        </button>
-      </form>
+      <header>
+        <form onSubmit={this.handeSubmit}>
+          <button type="submit">
+            <BsSearch />
+          </button>
+          <input
+            type="text"
+            name="searchName"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+            value={this.state.searchName}
+            onChange={this.handleNameChange}
+          />
+        </form>
+      </header>
     );
   }
 }
