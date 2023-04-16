@@ -1,54 +1,46 @@
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Component } from 'react';
+import getGalleryCollection from 'services/api';
+import { ImageGalleryStyled } from './ImageGallery.styled';
 
 export default class ImageGallery extends Component {
   state = {
     searchName: null,
     error: null,
     status: 'idle',
+    collection: [],
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.searchName;
-    const nextName = this.props.searchName;
+    const searchQuery = this.props.searchName;
 
-    if (prevName !== nextName) {
-      this.setState({ status: 'pending' });
-      fetch(
-        `https://pixabay.com/api/?q=${nextName}&page=1&key=28343249-1460158105f561498120f2a7a&image_type=photo&orientation=horizontal&per_page=12`
-      )
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          return Promise.reject(new Error(`Invalid request "${nextName}" .`));
-        })
-        .then(data => this.setState({ data, status: 'resolved' }))
-        .catch(error => this.setState({ error, status: 'rejected' }));
+    if (prevName !== searchQuery) {
+      const collection = await getGalleryCollection({ searchQuery });
+
+      this.setState({ collection });
     }
   }
   render() {
     const { status, error, searchName } = this.state;
 
+    // if (status === 'idle') {
+    //   return <div>Enter your query in the search bar.</div>;
+    // }
+    // if (status === 'pending') {
+    //   return <div>Download...</div>;
+    // }
+    // if (status === 'rejected') {
+    //   return <div>{error.message}</div>;
+    // }
     if (status === 'idle') {
-      return <div>Enter your query in the search bar.</div>;
-    }
-    if (status === 'pending') {
-      return <div>Download...</div>;
-    }
-    if (status === 'rejected') {
-      return <div>{error.message}</div>;
-    }
-    if (status === 'resolved') {
-      const dataHits = this.state.data.hits;
-      console.log(dataHits);
+      const { collection } = this.state;
       return (
-        <ul>
-          {dataHits.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <li key={id}>
-              <img src={webformatURL} alt={tags} />
-            </li>
+        <ImageGalleryStyled>
+          {collection.map(({ id, webformatURL, largeImageURL, tags }) => (
+            <ImageGalleryItem key={id} imageSmall={webformatURL} tags={tags} />
           ))}
-        </ul>
+        </ImageGalleryStyled>
       );
     }
   }
