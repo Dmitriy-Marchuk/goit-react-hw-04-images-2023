@@ -2,13 +2,23 @@ import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Component } from 'react';
 import getGalleryCollection from 'services/api';
 import { ImageGalleryStyled } from './ImageGallery.styled';
+import Modal from 'components/Modal/Modal';
 
 export default class ImageGallery extends Component {
   state = {
     searchName: null,
     error: null,
     status: 'idle',
+    showModal: false,
     collection: [],
+  };
+
+  showModal = ({ largeImageURL, tags }) => {
+    this.setState({
+      showModal: true,
+      largeImageURL: largeImageURL,
+      tags: tags,
+    });
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -34,13 +44,24 @@ export default class ImageGallery extends Component {
     //   return <div>{error.message}</div>;
     // }
     if (status === 'idle') {
-      const { collection } = this.state;
+      const { collection, showModal, largeImageURL } = this.state;
       return (
-        <ImageGalleryStyled>
-          {collection.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <ImageGalleryItem key={id} imageSmall={webformatURL} tags={tags} />
-          ))}
-        </ImageGalleryStyled>
+        <>
+          <ImageGalleryStyled>
+            {collection.map(
+              ({ id, webformatURL, largeImageURL, tags, showModal }) => (
+                <ImageGalleryItem
+                  key={id}
+                  imageSmall={webformatURL}
+                  largeImageURL={largeImageURL}
+                  tags={tags}
+                  showModal={this.showModal}
+                />
+              )
+            )}
+          </ImageGalleryStyled>
+          {showModal && <Modal largeImageURL={largeImageURL} />}
+        </>
       );
     }
   }
