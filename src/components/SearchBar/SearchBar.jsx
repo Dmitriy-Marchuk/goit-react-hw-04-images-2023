@@ -17,20 +17,36 @@ export default class SearchBar extends Component {
   handleNameChange = event => {
     this.setState({ searchName: event.currentTarget.value.toLowerCase() });
   };
-  handeSubmit = event => {
-    event.preventDefault();
 
-    if (this.state.searchName.trim() === '') {
+  handleSubmit = event => {
+    event.preventDefault();
+    const inputValue = event.target.elements.searchName.value;
+    const { searchName } = this.state;
+
+    if (searchName.trim() === '') {
       return toast.error('Wrong request! Write something before submit.');
     }
-    this.props.onSubmit(this.state.searchName);
-    this.setState({ searchName: '' });
+
+    // if (inputValue.trim() === searchName) {
+    //   return toast.warning(
+    //     `You have already entered this query, with value ${inputValue}`
+    //   );
+    // }
+    this.props.onSubmit(searchName);
+    console.log('searchbarHandleSubmit');
+    this.setState({
+      searchName: '',
+      collection: [],
+      currentPage: 1,
+      totalHits: null,
+      showModal: false,
+    });
   };
 
   render() {
     return (
       <Searchbar>
-        <SearchForm onSubmit={this.handeSubmit}>
+        <SearchForm onSubmit={this.handleSubmit}>
           <SearchFormButton type="submit">
             <BsSearch size={25} />
           </SearchFormButton>

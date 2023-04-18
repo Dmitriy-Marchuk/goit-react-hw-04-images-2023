@@ -8,10 +8,21 @@ import ImageGallery from './ImageGallery/ImageGallery';
 export default class App extends Component {
   state = {
     searchName: '',
+    collection: [],
+    currentPage: 1,
+    totalHits: null,
+    showModal: false,
   };
 
-  handleFormSubmit = searchName => {
-    this.setState({ searchName });
+  handleFormSubmit = queryName => {
+    console.log('appHandleSubmit');
+    this.setState({
+      searchName: queryName,
+      collection: [],
+      currentPage: 1,
+      totalHits: null,
+      showModal: false,
+    });
   };
 
   render() {
