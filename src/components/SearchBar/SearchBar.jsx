@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import {
   SearchForm,
   SearchFormButton,
-  SearchFormButtonLabel,
   SearchFormInput,
   Searchbar,
 } from './SearchBar.styled';
@@ -26,21 +25,14 @@ export default class SearchBar extends Component {
     if (searchName.trim() === '') {
       return toast.error('Wrong request! Write something before submit.');
     }
+    if (this.props.queryName.trim() === inputValue) {
+      return toast.warning(
+        `You have already entered this query, with name "${inputValue}"!`
+      );
+    }
 
-    // if (inputValue.trim() === searchName) {
-    //   return toast.warning(
-    //     `You have already entered this query, with value ${inputValue}`
-    //   );
-    // }
     this.props.onSubmit(searchName);
-    console.log('searchbarHandleSubmit');
-    this.setState({
-      searchName: '',
-      collection: [],
-      currentPage: 1,
-      totalHits: null,
-      showModal: false,
-    });
+    event.target.reset();
   };
 
   render() {
