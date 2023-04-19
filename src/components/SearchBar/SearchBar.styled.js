@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { BsSearch } from 'react-icons/bs';
 
 export const Searchbar = styled.header`
   top: 0;
