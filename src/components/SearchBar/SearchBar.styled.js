@@ -7,7 +7,7 @@ export const Searchbar = styled.header`
   z-index: 1100;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   min-height: 64px;
   padding-right: 24px;
   padding-left: 24px;
@@ -49,8 +49,8 @@ export const SearchFormButton = styled.button`
 `;
 
 export const SearchFormInput = styled.input`
-  display: inline-block;
   width: 100%;
+  height: 100%;
   font: inherit;
   font-size: 20px;
   border: none;

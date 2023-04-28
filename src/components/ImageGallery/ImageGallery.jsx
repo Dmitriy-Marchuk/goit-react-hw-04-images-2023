@@ -1,61 +1,48 @@
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
-import { Component } from 'react';
+import { useState } from 'react';
 import { ImageGalleryStyled } from './ImageGallery.styled';
 import Modal from 'components/Modal/Modal';
 
-export default class ImageGallery extends Component {
-  state = {
-    searchName: '',
-    error: null,
-    showModal: false,
-    collection: [],
-    tags: '',
-    currentPage: 1,
-    totalHits: null,
-    loading: false,
+const ImageGallery = ({ collection }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [tags, setTags] = useState('');
+  const [largeImageURL, setLargeImageURL] = useState('');
+
+  const onShowModal = ({ largeImageURL, tags }) => {
+    setShowModal(true);
+    setTags(tags);
+    setLargeImageURL(largeImageURL);
   };
 
-  showModal = ({ largeImageURL, tags }) => {
-    this.setState({
-      showModal: true,
-      largeImageURL: largeImageURL,
-      tags: tags,
-    });
+  const onCloseModal = () => {
+    setShowModal(false);
+    setLargeImageURL('');
+    setTags('');
   };
 
-  closeModal = () => {
-    this.setState({
-      showModal: false,
-      largeImageURL: '',
-      tags: '',
-    });
-  };
-
-  render() {
-    const collection = this.props.collection;
-
-    return (
-      <>
-        <ImageGalleryStyled>
-          {collection.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <ImageGalleryItem
-              key={id}
-              imageSmall={webformatURL}
-              largeImageURL={largeImageURL}
-              tags={tags}
-              showModal={this.showModal}
-            />
-          ))}
-        </ImageGalleryStyled>
-
-        {this.state.showModal && (
-          <Modal
-            largeImageURL={this.state.largeImageURL}
-            tags={this.state.tags}
-            closeModal={this.closeModal}
+  return (
+    <>
+      <ImageGalleryStyled>
+        {collection.map(({ id, webformatURL, largeImageURL, tags }) => (
+          <ImageGalleryItem
+            key={id}
+            imageSmall={webformatURL}
+            largeImageURL={largeImageURL}
+            tags={tags}
+            showModal={onShowModal}
           />
-        )}
-      </>
-    );
-  }
-}
+        ))}
+      </ImageGalleryStyled>
+
+      {showModal && (
+        <Modal
+          largeImageURL={largeImageURL}
+          tags={tags}
+          closeModal={onCloseModal}
+        />
+      )}
+    </>
+  );
+};
+
+export default ImageGallery;
